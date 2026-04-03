@@ -4,6 +4,8 @@ Token registry and verification service for [`@geometra/auth`](https://github.co
 
 Creates, stores, and verifies tokens with role-based access control. Serves as the backend for `@geometra/auth`'s `remoteVerifier()`.
 
+**[Geometra](https://github.com/razroo/geometra)** · **[geometra-auth](https://github.com/razroo/geometra-auth)** · **[Platform auth doc](https://github.com/razroo/geometra/blob/main/PLATFORM_AUTH.md)** — how this fits the DOM-free stack (WS auth at upgrade, no coupling in `@geometra/core`).
+
 ## Install
 
 ```bash
@@ -30,8 +32,8 @@ const viewer = await registry.createToken({ role: 'viewer' })
 Then on the Geometra server, point `remoteVerifier()` at the registry:
 
 ```ts
-import { createAuth } from '@geometra/auth'
-import { remoteVerifier } from '@geometra/auth'
+import { createServer } from '@geometra/server'
+import { createAuth, remoteVerifier } from '@geometra/auth'
 
 const auth = createAuth({
   verify: remoteVerifier('http://localhost:3200/verify'),
@@ -39,7 +41,17 @@ const auth = createAuth({
     viewer: { allow: ['resize'] },
   },
 })
+
+await createServer(view, { port: 3100, ...auth })
 ```
+
+### Three-process local smoke test
+
+1. **Registry** — `serveRegistry({ port: 3200, adminKey, jwtSecret? })`
+2. **Geometra server** — `createServer` + `createAuth` + `remoteVerifier('http://localhost:3200/verify')`
+3. **Browser client** — `connectWithAuth` from `@geometra/auth/client` with a token from `POST /admin/tokens`
+
+Use Geometra **`PLATFORM_AUTH.md`** for close codes, forbidden handling, and token refresh.
 
 ## API
 
