@@ -1,0 +1,44 @@
+{
+  "name": "@geometra/token-registry",
+  "version": "0.1.0",
+  "description": "Token registry and verification service for @geometra/auth",
+  "license": "MIT",
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/razroo/geometra-token-registry"
+  },
+  "keywords": [
+    "geometra",
+    "auth",
+    "token",
+    "registry",
+    "jwt",
+    "rbac"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build",
+    "check": "tsc --noEmit",
+    "test": "bun test src/**/*.test.ts"
+  },
+  "dependencies": {
+    "jose": "^6.0.11"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/node": "^25.5.1",
+    "typescript": "^5.7.0"
+  }
+}
